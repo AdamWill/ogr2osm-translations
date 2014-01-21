@@ -55,6 +55,19 @@ def translateName(rawname):
     return newName.strip()
 
 
+def filterFeature(ogrfeature, fieldNames, reproject):
+    if ogrfeature is None:
+        return
+    # Drop any entries without both a house number and street name (the dataset
+    # contains a thousand or so entries missing both, for some reason)
+    housenumber = ogrfeature.GetFieldAsString("CIVIC_NO")
+    streetname = ogrfeature.GetFieldAsString("STREETNAME")
+    if not (housenumber and streetname):
+        return
+    else:
+        return ogrfeature
+
+
 def filterTags(attrs):
     if not attrs:
         return
