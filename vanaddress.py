@@ -32,48 +32,48 @@ import time
 
 
 def translateName(rawname):
-	suffixlookup = {}
-	suffixlookup.update({'AV':'Avenue'})
-	suffixlookup.update({'ST':'Street'})
+    suffixlookup = {}
+    suffixlookup.update({'AV':'Avenue'})
+    suffixlookup.update({'ST':'Street'})
 
-	suffixlookup.update({'E':'East'})
-	suffixlookup.update({'S':'South'})
-	suffixlookup.update({'N':'North'})
-	suffixlookup.update({'W':'West'})
-	suffixlookup.update({'NE':'Northeast'})
-	suffixlookup.update({'NW':'Northwest'})
-	suffixlookup.update({'SE':'Southeast'})
-	suffixlookup.update({'SW':'Southwest'})
-	
+    suffixlookup.update({'E':'East'})
+    suffixlookup.update({'S':'South'})
+    suffixlookup.update({'N':'North'})
+    suffixlookup.update({'W':'West'})
+    suffixlookup.update({'NE':'Northeast'})
+    suffixlookup.update({'NW':'Northwest'})
+    suffixlookup.update({'SE':'Southeast'})
+    suffixlookup.update({'SW':'Southwest'})
 
-	newName = ''
-	for partName in rawname.split():
-		newName = newName + ' ' + suffixlookup.get(partName,partName)
-		# We can't use str.title(); it doesn't handle ordinals right
-		newName = capwords(newName)
-	
-	return newName.strip()
 
+    newName = ''
+    for partName in rawname.split():
+        newName = newName + ' ' + suffixlookup.get(partName,partName)
+        # We can't use str.title(); it doesn't handle ordinals right
+        newName = capwords(newName)
+
+    return newName.strip()
 
 
 def filterTags(attrs):
-	if not attrs: return
+    if not attrs:
+        return
 
-	tags = {}
-	
-	# Add the source. This includes the date/time you run the conversion
-	# at. Obviously, it's only strictly correct if you downloaded the data
-	# on the same day you run the conversion, but that should be close
-	# enough.
-	tags.update({'source':'City of Vancouver GIS data ' + time.strftime("%Y-%m-%d")})
-	tags.update({'addr:city':'Vancouver'})
-	tags.update({'addr:country':'CA'})
-	#automagically convert names
-	if attrs['STREETNAME']:
-		tags.update({'addr:street':translateName(attrs['STREETNAME'].strip(' '))})
+    tags = {}
 
-	if attrs['CIVIC_NO']:
-		tags.update({'addr:housenumber':attrs['CIVIC_NO']})
+    # Add the source. This includes the date/time you run the conversion
+    # at. Obviously, it's only strictly correct if you downloaded the data
+    # on the same day you run the conversion, but that should be close
+    # enough.
+    tags.update({'source':'City of Vancouver GIS data ' + time.strftime("%Y-%m-%d")})
+    tags.update({'addr:city':'Vancouver'})
+    tags.update({'addr:country':'CA'})
+    #automagically convert names
+    if attrs['STREETNAME']:
+        tags.update({'addr:street':translateName(attrs['STREETNAME'].strip(' '))})
 
-	return tags
+    if attrs['CIVIC_NO']:
+        tags.update({'addr:housenumber':attrs['CIVIC_NO']})
+
+    return tags
 
